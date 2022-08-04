@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exe4j version="7.0" transformSequenceNumber="3">
+  <directoryPresets config="C:/Users/wwl/Desktop/aa" />
+  <application name="更新程序" distributionSourceDir="C:/Users/wwl/Desktop/aa" />
+  <executable name="update" wrapperType="embed" iconSet="true" iconFile="C:/soft/source/logo.ico" executableDir="." executableMode="gui" singleInstance="true" dpiAware="true" />
+  <java mainClass="org.springframework.boot.loader.JarLauncher" minVersion="1.8">
+    <classPath>
+      <archive location="C:/Users/wwl/Desktop/aa/update.jar" failOnError="false" />
+    </classPath>
+  </java>
+</exe4j>
