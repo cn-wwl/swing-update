@@ -1,0 +1,7 @@
+encrypt:
+  key: 123456
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
