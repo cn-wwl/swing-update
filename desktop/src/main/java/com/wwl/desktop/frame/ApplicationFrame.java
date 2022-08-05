@@ -1,8 +1,10 @@
 package com.wwl.desktop.frame;
 
 import com.wwl.core.utils.SpringContextUtils;
+import com.wwl.desktop.menu.IMenu;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
@@ -21,13 +23,36 @@ public class ApplicationFrame extends JFrame {
         this.setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("icons/logo.png"))).getImage());
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.initUi();
         initListener();
     }
 
     private void initUi(){
+        this.initMenu();
+    }
 
+    public void initMenu() {
+        JMenuBar menuBar = new JMenuBar();
+
+
+
+        this.setJMenuBar(menuBar);
+        menuBar.updateUI();
 
     }
+
+    private void menuAction(ActionEvent event){
+        System.out.println(event.getActionCommand());
+    }
+
+    private void openAction(ActionEvent event){
+        System.out.println("打开");
+    }
+
+    private void recordAction(ActionEvent event){
+        System.out.println("更新记录");
+    }
+
 
 
     private void initListener() {

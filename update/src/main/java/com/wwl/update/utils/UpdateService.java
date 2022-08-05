@@ -9,7 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -46,14 +50,17 @@ public class UpdateService {
      */
     private File updateFile;
 
+    private String currentVersion;
+    private String lastVersion;
+
 
     /**
      * 版本验证
      */
     public boolean versionVerify() {
-
-        String currentVersion = properties.getVersion();
-        return currentVersion.equals(systemConfig.config().getVersion());
+        currentVersion = properties.getVersion();
+        lastVersion =systemConfig.config().getVersion();
+        return currentVersion.equals(lastVersion);
     }
 
     /**
@@ -62,7 +69,18 @@ public class UpdateService {
     public boolean downloadFile() {
         try {
             // 下载 更新文件
-            String fileUrl = String.format("%s/resources/download/update/%s.zip", systemConfig.getConfigProperties().getConfigBase(), systemConfig.config().getVersion());
+
+            String configUrl = systemConfig.getConfigProperties().getConfigBase();
+
+            String downLoadFileName = this.getDownloadFileName();
+
+            String fileUrl;
+            if (configUrl.endsWith("/") ){
+                fileUrl = String.format("%sresources/download/update/%s.zip", configUrl, downLoadFileName);
+            }else {
+                fileUrl = String.format("%s/resources/download/update/%s.zip", configUrl, downLoadFileName);
+            }
+
             rootDirPath = new File("").getCanonicalPath();
             updateTempDirFile = new File(rootDirPath + "\\UpdateTemp");
             if (!updateTempDirFile.exists()) {
@@ -78,6 +96,29 @@ public class UpdateService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 如果本地版本落后于最新版两个小版本，则直接下载最新版
+     * @return
+     */
+    private String getDownloadFileName() {
+        int currentVersionInt = this.getVersionInt(this.currentVersion);
+        int lastVersionInt = this.getVersionInt(this.lastVersion);
+        if (lastVersionInt - currentVersionInt > 2) {
+            return "last";
+        }
+        return this.lastVersion;
+    }
+
+    private int getVersionInt(String version) {
+
+        // 版本号规则
+        // V= x.y.z = x * 100 + y * 10 + z
+        String[] versionArray = version.split("\\.");
+        return Integer.parseInt(versionArray[0]) * 100 +
+                Integer.parseInt(versionArray[1]) * 10
+                + Integer.parseInt(versionArray[2]);
     }
 
     /**
@@ -101,7 +142,16 @@ public class UpdateService {
      */
     public boolean updateFileReplace() {
         try {
-            FileUtils.copyDirectory(updateTempDirFile.getAbsolutePath() + "\\" + systemConfig.config().getVersion(), rootDirPath);
+
+            String filePath = null;
+            for (File file : Objects.requireNonNull(updateTempDirFile.listFiles())) {
+                if (file.isDirectory()){
+                    filePath = file.getAbsolutePath();
+                    break;
+                }
+            }
+
+            FileUtils.copyDirectory(filePath, rootDirPath);
             //删除临时目录
             FileUtils.removeFile(updateTempDirFile);
         } catch (Exception exception) {
