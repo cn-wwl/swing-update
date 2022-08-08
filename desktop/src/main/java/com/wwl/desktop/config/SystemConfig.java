@@ -20,6 +20,8 @@ public class SystemConfig {
 
     private DesktopConfig desktopConfig;
 
+    private UpdateConfig updateConfig;
+
     @Autowired
     private SystemConfigProperties configProperties;
 
@@ -30,11 +32,16 @@ public class SystemConfig {
         return this.desktopConfig;
     }
 
-    public SystemConfigProperties getConfigProperties() {
+    public SystemConfigProperties properties() {
         return configProperties;
     }
 
-    public void setConfigProperties(SystemConfigProperties configProperties) {
-        this.configProperties = configProperties;
+
+    public UpdateConfig updateConfig(){
+        if(this.updateConfig == null){
+            this.updateConfig = this.requestUtils.updateConfig(configProperties.getConfigName(),configProperties.getConfigPassWord()).toJavaObject(UpdateConfig.class);
+        }
+        return this.updateConfig;
     }
+
 }

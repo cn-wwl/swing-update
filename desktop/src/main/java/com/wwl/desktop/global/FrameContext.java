@@ -23,18 +23,15 @@ import java.time.LocalDateTime;
 public class FrameContext {
 
     @Autowired
-    private SystemConfigProperties properties;
-
-    @Autowired
     private SystemConfig systemConfig;
 
-    private ApplicationFrame applicationFrame;
+    private static ApplicationFrame applicationFrame;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void start() {
         try {
-            this.versionVerify();
+           // this.versionVerify();
 
             Thread.sleep(500);
             InitialFrame.getInstance().setProgressBar(25,"正在加载插件...");
@@ -61,7 +58,7 @@ public class FrameContext {
      * 版本验证
      */
     private void versionVerify() {
-        String currentVersion = properties.getVersion();
+        String currentVersion = systemConfig.properties().getVersion();
         if (!currentVersion.equals(systemConfig.config().getVersion())) {
             JOptionPane.showMessageDialog( InitialFrame.getInstance(), "发现新的应用版本需要更新");
             this.desktopUpdate();
@@ -80,5 +77,7 @@ public class FrameContext {
         }
     }
 
-
+    public static ApplicationFrame getApplicationFrame() {
+        return applicationFrame;
+    }
 }

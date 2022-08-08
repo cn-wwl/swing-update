@@ -31,7 +31,7 @@ public class InitialFrame extends JFrame {
 
         this.setContentPane(contentPanel);
         this.setSize(400, 240);
-        this.setAlwaysOnTop(true);
+       // this.setAlwaysOnTop(true);
 
         this.setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("icons/logo.png"))).getImage());
         this.setLocationRelativeTo(null);

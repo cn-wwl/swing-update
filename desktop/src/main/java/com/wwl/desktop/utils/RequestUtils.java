@@ -90,10 +90,27 @@ public class RequestUtils {
             String base64Info = base64.encodeToString(authorInfo.getBytes());
             authInfo.put("Authorization","Basic "+ base64Info);
 
-            String aa=  this.httpUtils.executeStringRequest(HttpUtils.RequestType.GET,requestUrl,null,authInfo,false,null,null);
-
             JSONObject object = JSONObject.parseObject(this.httpUtils.executeStringRequest(HttpUtils.RequestType.GET,requestUrl,null,authInfo,false,null,null));
             pluginConfigs.put(plugin,object);
+            return object;
+        } catch (IOException e) {
+            this.logger.error("插件配置加载异常",e);
+            return new JSONObject();
+        }
+    }
+
+    public JSONObject updateConfig(String name,String password){
+
+        String requestUrl = this.systemConfig.getUpdateUrl();
+        try {
+            Map<String,String> authInfo = new HashMap<>();
+            String authorInfo = String.format("%s:%s",name,password);
+            Base64 base64 = new Base64();
+            String base64Info = base64.encodeToString(authorInfo.getBytes());
+            authInfo.put("Authorization","Basic "+ base64Info);
+
+            JSONObject object = JSONObject.parseObject(this.httpUtils.executeStringRequest(HttpUtils.RequestType.GET,requestUrl,null,authInfo,false,null,null));
+
             return object;
         } catch (IOException e) {
             this.logger.error("插件配置加载异常",e);

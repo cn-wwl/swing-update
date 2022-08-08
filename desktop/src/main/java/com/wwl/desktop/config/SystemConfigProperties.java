@@ -17,6 +17,8 @@ public class SystemConfigProperties {
 
     private String gateway ;
     private String configUrl;
+
+    private String updateUrl;
     private String configBase;
 
     private String version;
@@ -80,5 +82,13 @@ public class SystemConfigProperties {
 
     public void setConfigPassWord(String configPassWord) {
         this.configPassWord = configPassWord;
+    }
+
+    public String getUpdateUrl() {
+        return updateUrl;
+    }
+
+    public void setUpdateUrl(String updateUrl) {
+        this.updateUrl = updateUrl;
     }
 }

@@ -3,7 +3,13 @@
   "versions": [
     {
       "version": "0.0.1",
-      "content": "1.更新了xxxx \n\t 2.更新了xxxx \n\t 3.更新了xxxx \n\t 4.更新了xxxx \n\t"
+      "content": "1.更新了xxxx\n2.更新了xxxx\n3.更新了xxxx\n4.更新了xxxx\n"
+    },{
+      "version": "0.0.2",
+      "content": "1.更新了xxxx\n2.更新了xxxx\n3.更新了xxxx\n4.更新了xxxx\n"
+    },{
+      "version": "0.0.3",
+      "content": "1.更新了xxxx\n2.更新了xxxx\n3.更新了xxxx\n4.更新了xxxx\n"
     }
   ]
 }

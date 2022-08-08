@@ -1,12 +1,16 @@
 package com.wwl.desktop.frame;
 
 import com.wwl.core.utils.SpringContextUtils;
-import com.wwl.desktop.menu.IMenu;
+import com.wwl.desktop.menu.BaseMenu;
+import com.wwl.desktop.menu.MenuFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,8 +20,12 @@ import java.util.Objects;
  */
 public class ApplicationFrame extends JFrame {
 
+    @Autowired
+    private MenuFactory menuFactory;
+
     public ApplicationFrame(){
         super();
+        SpringContextUtils.injectService(this);
         this.setTitle("Java Swing Desktop");
         this.setSize(1000,650);
         this.setIconImage(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("icons/logo.png"))).getImage());
@@ -32,13 +40,15 @@ public class ApplicationFrame extends JFrame {
     }
 
     public void initMenu() {
-        JMenuBar menuBar = new JMenuBar();
+        try {
+            JMenuBar menuBar = new JMenuBar();
 
-
-
-        this.setJMenuBar(menuBar);
-        menuBar.updateUI();
-
+            menuFactory.initMenu(menuBar);
+            this.setJMenuBar(menuBar);
+            menuBar.updateUI();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void menuAction(ActionEvent event){

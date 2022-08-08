@@ -6,15 +6,21 @@ import java.awt.event.ActionListener;
 /**
  * @author wwl
  * @date 2022/8/5 17:41
- * @desc TODO
+ * @desc 菜单接口
  */
-public interface IMenu {
+public abstract class BaseMenu {
+
+    private int menuOrder;
+
+    public BaseMenu(int order){
+        menuOrder = order;
+    }
 
     /**
      * 加载菜单
      * @param menuBar
      */
-    void initMenu(JMenuBar menuBar);
+    public abstract void initMenu(JMenuBar menuBar);
 
     /**
      * 生成菜单
@@ -22,11 +28,13 @@ public interface IMenu {
      * @param actionListener 事件
      * @return 菜单
      */
-    default JMenuItem generateMenuItem(String name, ActionListener actionListener) {
-        JMenuItem menuItem = new JMenuItem();
-        menuItem.setName(name);
+    protected JMenuItem generateMenuItem(String name, ActionListener actionListener) {
+        JMenuItem menuItem = new JMenuItem(name);
         menuItem.addActionListener(actionListener);
         return menuItem;
     }
 
+    public int getMenuOrder() {
+        return menuOrder;
+    }
 }
