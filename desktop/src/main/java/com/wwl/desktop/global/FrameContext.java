@@ -1,5 +1,6 @@
 package com.wwl.desktop.global;
 
+import com.wwl.core.utils.VersionUtils;
 import com.wwl.desktop.config.SystemConfig;
 import com.wwl.desktop.config.SystemConfigProperties;
 import com.wwl.desktop.frame.ApplicationFrame;
@@ -31,7 +32,7 @@ public class FrameContext {
 
     public void start() {
         try {
-           // this.versionVerify();
+            this.versionVerify();
 
             Thread.sleep(500);
             InitialFrame.getInstance().setProgressBar(25,"正在加载插件...");
@@ -58,12 +59,21 @@ public class FrameContext {
      * 版本验证
      */
     private void versionVerify() {
-        String currentVersion = systemConfig.properties().getVersion();
-        if (!currentVersion.equals(systemConfig.config().getVersion())) {
+        int currentVersionInt = VersionUtils.getVersionInt(systemConfig.properties().getVersion());
+        int lastVersionInt = VersionUtils.getVersionInt(systemConfig.config().getVersion());
+
+        if (currentVersionInt == lastVersionInt){
+            return;
+        }else if (currentVersionInt < lastVersionInt){
             JOptionPane.showMessageDialog( InitialFrame.getInstance(), "发现新的应用版本需要更新");
             this.desktopUpdate();
+        }else {
+            JOptionPane.showMessageDialog(InitialFrame.getInstance(), "本地版本配置错误");
+            System.exit(0);
         }
     }
+
+
 
     private void desktopUpdate(){
         try {

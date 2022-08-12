@@ -1,6 +1,7 @@
 package com.wwl.update.utils;
 
 import com.wwl.core.utils.FileUtils;
+import com.wwl.core.utils.VersionUtils;
 import com.wwl.core.utils.ZipUtils;
 import com.wwl.update.config.SystemConfig;
 import com.wwl.update.config.SystemConfigProperties;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -60,7 +62,19 @@ public class UpdateService {
     public boolean versionVerify() {
         currentVersion = properties.getVersion();
         lastVersion =systemConfig.config().getVersion();
-        return currentVersion.equals(lastVersion);
+
+        int currentVersionInt = VersionUtils.getVersionInt(this.currentVersion);
+        int lastVersionInt = VersionUtils.getVersionInt(this.lastVersion);
+        if (currentVersionInt == lastVersionInt){
+            return true;
+        }else if (currentVersionInt < lastVersionInt){
+
+            return false;
+        }else {
+            JOptionPane.showMessageDialog(null, "本地版本配置错误");
+            System.exit(0);
+            return false;
+        }
     }
 
     /**
@@ -103,22 +117,13 @@ public class UpdateService {
      * @return
      */
     private String getDownloadFileName() {
-        int currentVersionInt = this.getVersionInt(this.currentVersion);
-        int lastVersionInt = this.getVersionInt(this.lastVersion);
+        int currentVersionInt = VersionUtils.getVersionInt(this.currentVersion);
+        int lastVersionInt = VersionUtils.getVersionInt(this.lastVersion);
+
         if (lastVersionInt - currentVersionInt > 2) {
             return "last";
         }
         return this.lastVersion;
-    }
-
-    private int getVersionInt(String version) {
-
-        // 版本号规则
-        // V= x.y.z = x * 100 + y * 10 + z
-        String[] versionArray = version.split("\\.");
-        return Integer.parseInt(versionArray[0]) * 100 +
-                Integer.parseInt(versionArray[1]) * 10
-                + Integer.parseInt(versionArray[2]);
     }
 
     /**
